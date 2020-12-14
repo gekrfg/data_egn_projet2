@@ -27,8 +27,6 @@ def get_similar_tweets(sentence):
         sim = string_similar(sentence, str(dfn['text'][i]))
         if sim >= 0.5:
             dfn['score'].at[i] = float(sim)
-        else:
-            continue
 
     dfn.dropna(axis=0, inplace=True)
     dfn.sort_values(by=['score'], ascending=False, inplace=True)
