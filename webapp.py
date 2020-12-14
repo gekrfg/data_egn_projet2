@@ -1,4 +1,11 @@
 from flask import Flask, request, render_template
+import pandas as pd
+import difflib
+import numpy as np
+
+
+df = pd.read_csv("tweets.csv",index_col=0)
+df['score'] = np.NaN
 
 REQUESTS= Counter('flask_redis_app_total_requests','How many times the application has been accessed')
 EXCEPTIONS = Counter('flask_redis_app_total_exceptions','How many times the application issued an exception')
@@ -8,11 +15,27 @@ LAST = Gauge('flask_redis_app_latency_summary_seconds','time need for a request'
 
 app = Flask(_name_)
 
+def string_similar(s1, s2):
+    return round(difflib.SequenceMatcher(None, s1, s2).quick_ratio(), 3)
+
+
 def get_similar_tweets(sentence):
     tweets_found = []
-    tweet_found = ''
-    for i in range(1, 21):
-        tweets_found.append("Top " + str(i) + " :" + tweet_found)
+
+    dfn = df.copy(deep=True)
+    for i in range(0, 17215):
+        sim = string_similar(sentence, str(dfn['text'][i]))
+        if sim >= 0.5:
+            dfn['score'].at[i] = float(sim)
+        else:
+            continue
+
+    dfn.dropna(axis=0, inplace=True)
+    dfn.sort_values(by=['score'], ascending=False, inplace=True)
+    dfn = dfn.reset_index()
+
+    for j in range(0, 20):
+        tweets_found.append("Top " + str(j + 1) + " : " + str(dfn['text'][j]))
     return tweets_found
 
 
