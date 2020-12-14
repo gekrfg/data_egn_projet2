@@ -8,7 +8,7 @@ df = pd.read_csv("tweets.csv",index_col=0)
 df['score'] = np.NaN
 
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 def string_similar(s1, s2):
     return round(difflib.SequenceMatcher(None, s1, s2).quick_ratio(), 3)
@@ -27,8 +27,12 @@ def get_similar_tweets(sentence):
     dfn.sort_values(by=['score'], ascending=False, inplace=True)
     dfn = dfn.reset_index()
 
-    for j in range(0, 20):
-        tweets_found.append("Top " + str(j + 1) + " : " + str(dfn['text'][j]))
+    if dfn.shape[0] >= 20:
+        for j in range(0, 20):
+            tweets_found.append("Top " + str(j+1) + " : " + str(dfn['text'][j]))
+    else:
+        for j in range(0, dfn.shape[0]):
+            tweets_found.append("Top " + str(j+1) + " : " + str(dfn['text'][j]))
     return tweets_found
 
 
