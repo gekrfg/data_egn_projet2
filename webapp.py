@@ -7,11 +7,6 @@ import numpy as np
 df = pd.read_csv("tweets.csv",index_col=0)
 df['score'] = np.NaN
 
-REQUESTS= Counter('flask_redis_app_total_requests','How many times the application has been accessed')
-EXCEPTIONS = Counter('flask_redis_app_total_exceptions','How many times the application issued an exception')
-
-INPROGRESS = Gauge('flask_redis_app_inprogress_gauge','How many requests to the app are currently in progress')
-LAST = Gauge('flask_redis_app_latency_summary_seconds','time need for a request')
 
 app = Flask(_name_)
 
