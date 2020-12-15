@@ -1,43 +1,66 @@
 from flask import Flask, request, render_template
 import pandas as pd
-import difflib
-import numpy as np
-from prometheus_client import start_http_server
-from prometheus_client import Counter
-from prometheus_client import Gauge
-from prometheus_client import Summary
-from prometheus_client import Histogram
+import re
+from os import path
+from gensim.models.doc2vec import Doc2Vec
+from spacy.lang.en import English
+from spacy.lang.en.stop_words import STOP_WORDS
+from spacy.tokenizer import Tokenizer
 
-df = pd.read_csv("tweets.csv", index_col=0)
-df['score'] = np.NaN
+nlp = English()
 
-app = Flask(__name__)
+tokenizer = Tokenizer(nlp.vocab)
+
+data = pd.read_csv(path.join(path.abspath('.'), 'tweets.csv'), index_col=0)
+data = data.drop_duplicates(subset=['id'])
+
+current_dir = path.abspath('.')
+
+def normalize(text, remove_stopwords):
+    text = text.lower()
+    regex = r'pic\.twitter\.com.*'
+    text = re.sub(regex, '', text, 0, re.MULTILINE)
+
+    text = nlp(text)
+    lemmatized = list()
+
+    for word in text:
+        lemma = word.lemma_.strip()
+        if lemma:
+            if not remove_stopwords or lemma not in STOP_WORDS:
+                lemmatized.append(lemma)
+
+    return " ".join(lemmatized)
 
 
-def string_similar(s1, s2):
-    return round(difflib.SequenceMatcher(None, s1, s2).quick_ratio(), 3)
+def remove_punctuation(tokens):
+    return [t for t in tokens if not t.is_punct or t.is_space]
+
+
+def process(text, *, remove_stopwords=True, remove_punct=False):
+    norm = normalize(text, remove_stopwords)
+    tokens = list(tokenizer(norm))
+    if remove_punct:
+        tokens = remove_punctuation(tokens)
+    return [str(token) for token in tokens]
+
+
+model = Doc2Vec.load(path.join(path.abspath('.'), 'model_file'))
 
 
 def get_similar_tweets(sentence):
-    tweets_found = []
+    tokens = process(sentence)
+    vector = model.infer_vector(tokens)
 
-    dfn = df.copy(deep=True)
-    for i in range(0, 17215):
-        sim = string_similar(sentence, str(dfn['text'][i]))
-        if sim >= 0.5:
-            dfn['score'].at[i] = float(sim)
+    result = []
+    for tweet_id, confidence in model.docvecs.most_similar([vector], topn=20):
+        tweet = data.iloc[tweet_id].to_dict()
+        result.append({**tweet, 'confidence': confidence, 'retweet': bool(tweet['retweet'])})
 
-    dfn.dropna(axis=0, inplace=True)
-    dfn.sort_values(by=['score'], ascending=False, inplace=True)
-    dfn = dfn.reset_index()
+    return result
 
-    if dfn.shape[0] >= 20:
-        for j in range(0, 20):
-            tweets_found.append("Top " + str(j + 1) + " : " + str(dfn['text'][j]))
-    else:
-        for j in range(0, dfn.shape[0]):
-            tweets_found.append("Top " + str(j + 1) + " : " + str(dfn['text'][j]))
-    return tweets_found
+
+app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])

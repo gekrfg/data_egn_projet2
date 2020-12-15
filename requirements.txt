@@ -1,6 +1,6 @@
 flask~=1.1.1
 pandas~=1.0.1
-numpy~=1.18.1
 prometheus_client
 requests~=2.22.0
-beautifulsoup4~=4.8.2
+gensim
+spacy

@@ -2,7 +2,6 @@ from webapp import string_similar, get_similar_tweets
 import unittest
 import os
 import requests
-from bs4 import BeautifulSoup
 
 
 class FlaskTests(unittest.TestCase):
