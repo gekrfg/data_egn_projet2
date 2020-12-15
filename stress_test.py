@@ -12,7 +12,7 @@ class FlaskTests(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_index(self):
+    def test_stress(self):
         n = 1000
         responses_urls = []
 
