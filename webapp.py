@@ -3,12 +3,11 @@ import pandas as pd
 import difflib
 import numpy as np
 
-
-df = pd.read_csv("tweets.csv",index_col=0)
+df = pd.read_csv("tweets.csv", index_col=0)
 df['score'] = np.NaN
 
-
 app = Flask(__name__)
+
 
 def string_similar(s1, s2):
     return round(difflib.SequenceMatcher(None, s1, s2).quick_ratio(), 3)
@@ -29,10 +28,10 @@ def get_similar_tweets(sentence):
 
     if dfn.shape[0] >= 20:
         for j in range(0, 20):
-            tweets_found.append("Top " + str(j+1) + " : " + str(dfn['text'][j]))
+            tweets_found.append("Top " + str(j + 1) + " : " + str(dfn['text'][j]))
     else:
         for j in range(0, dfn.shape[0]):
-            tweets_found.append("Top " + str(j+1) + " : " + str(dfn['text'][j]))
+            tweets_found.append("Top " + str(j + 1) + " : " + str(dfn['text'][j]))
     return tweets_found
 
 
