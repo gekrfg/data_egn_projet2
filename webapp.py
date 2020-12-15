@@ -1,14 +1,15 @@
 from flask import Flask, request, render_template
 import pandas as pd
+import multiprocessing
 import re
 from os import path
-from gensim.models.doc2vec import Doc2Vec
+from gensim.models.doc2vec import TaggedDocument, Doc2Vec
 from spacy.lang.en import English
 from spacy.lang.en.stop_words import STOP_WORDS
 from spacy.tokenizer import Tokenizer
 
 nlp = English()
-
+# Create a blank Tokenizer with just the English vocab
 tokenizer = Tokenizer(nlp.vocab)
 
 data = pd.read_csv(path.join(path.abspath('.'), 'tweets.csv'), index_col=0)
@@ -53,9 +54,24 @@ def get_similar_tweets(sentence):
     vector = model.infer_vector(tokens)
 
     result = []
-    for tweet_id, confidence in model.docvecs.most_similar([vector], topn=20):
-        tweet = data.iloc[tweet_id].to_dict()
-        result.append({**tweet, 'confidence': confidence, 'retweet': bool(tweet['retweet'])})
+    try:
+        for tweet_id, confidence in model.docvecs.most_similar([vector], topn=20):
+            tweet = data.iloc[tweet_id]
+            result.append(tweet)
+    except Exception:
+        try:
+            for tweet_id, confidence in model.docvecs.most_similar([vector], topn=5):
+                tweet = data.iloc[tweet_id]
+                result.append(tweet)
+        except Exception:
+            try:
+                for tweet_id, confidence in model.docvecs.most_similar([vector], topn=3):
+                    tweet = data.iloc[tweet_id]
+                    result.append(tweet)
+            except Exception:
+                for tweet_id, confidence in model.docvecs.most_similar([vector], topn=1):
+                    tweet = data.iloc[tweet_id]
+                    result.append(tweet)
 
     return result
 

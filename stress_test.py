@@ -1,3 +1,4 @@
+import json
 import unittest
 import requests
 import time
@@ -13,20 +14,25 @@ class FlaskTests(unittest.TestCase):
         pass
 
     def test_stress(self):
-        n = 1000
-        responses_urls = []
+        count = 1000
 
-        for i in range(n):
-            responses_urls.append(requests.get('http://localhost:5000'))
+        params = {
+            'sentence': "I'm feeling really good!",
+            "form_type": "analysis_sentence"
+        }
 
-        start = time.time()
-        end = time.time()
-        t = end - start
+        kaishi = time.time()
 
-        for i in range(n):
-            self.assertEqual(responses_urls[i].status_code, 200)
+        for i in range(1000):
+            responce = requests.post('http://localhost:5000', data=params)
+            self.assertEqual(responce.status_code, 200)
+        
+        jieshu = time.time()
 
-        print("The {} requests took: {} seconds".format(n, t))
+        t = jieshu - kaishi
+
+
+        print("The {} requests took: {} seconds".format(count, t))
 
 
 if __name__ == '__main__':
