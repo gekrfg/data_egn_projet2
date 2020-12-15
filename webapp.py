@@ -2,6 +2,11 @@ from flask import Flask, request, render_template
 import pandas as pd
 import difflib
 import numpy as np
+from prometheus_client import start_http_server
+from prometheus_client import Counter
+from prometheus_client import Gauge
+from prometheus_client import Summary
+from prometheus_client import Histogram
 
 df = pd.read_csv("tweets.csv", index_col=0)
 df['score'] = np.NaN
