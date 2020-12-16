@@ -8,7 +8,7 @@ pipeline{
           
         }
       }  
-    }
+    
     stage('Run image'){
       steps{
 	  
@@ -58,6 +58,6 @@ pipeline{
         }
       }
     }
+	}
 
   }
-}
