@@ -1,8 +1,5 @@
 # Data Engineering Project 2
 
-## Link to Trello
-[https://trello.com/b/GBY14s2p/engineeringproject](https://trello.com/b/GBY14s2p/engineeringproject)
-
 ## Create model
 
 Run create\_model.py to get the model_file
@@ -41,4 +38,6 @@ Running the stress tests:
 python stress_test.py
 ```
 
+## Link to Trello
+[https://trello.com/b/GBY14s2p/engineeringproject](https://trello.com/b/GBY14s2p/engineeringproject)
 
