@@ -11,7 +11,7 @@ tokenizer = Tokenizer(nlp.vocab)
 current_dir = path.abspath('.')
 MODEL_FILE_NAME = path.join(path.abspath('.'), 'model_file')
 
-# 导入数据 drop不需要的列
+
 data = pd.read_csv(path.join(current_dir, 'tweets.csv'), index_col=0)
 data = data.drop_duplicates(subset=['id'])
 
