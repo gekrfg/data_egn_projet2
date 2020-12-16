@@ -15,26 +15,7 @@ pipeline{
             powershell 'docker run -p 5000:5000 data-eng-proj2'
       }
     }
-    stage('Unittest'){
-      steps{
-        script{
-		  if (env.BRANCH_NAME == 'dev'){
-            powershell 'python stress_test.py '
-            }
-        }
-      }
-	}
-	
     
-    stage('User acceptance'){
-      steps{
-        script{
-          if (env.BRANCH_NAME == 'main' ) {
-            input 'Do you want to push?'
-          }
-        }
-      }
-    }
 	
 	stage('Release'){
       steps{
