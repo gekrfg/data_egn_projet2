@@ -17,6 +17,7 @@ data = data.drop_duplicates(subset=['id'])
 
 current_dir = path.abspath('.')
 
+
 def normalize(text, remove_stopwords):
     text = text.lower()
     regex = r'pic\.twitter\.com.*'
@@ -52,26 +53,15 @@ model = Doc2Vec.load(path.join(path.abspath('.'), 'model_file'))
 def get_similar_tweets(sentence):
     tokens = process(sentence)
     vector = model.infer_vector(tokens)
-
     result = []
     try:
+        i = 1
         for tweet_id, confidence in model.docvecs.most_similar([vector], topn=20):
-            tweet = data.iloc[tweet_id]
-            result.append(tweet)
+            tweet = data.iloc[tweet_id]['text']
+            result.append("Top " + str(i) + " : " + tweet)
+            i = i + 1
     except Exception:
-        try:
-            for tweet_id, confidence in model.docvecs.most_similar([vector], topn=5):
-                tweet = data.iloc[tweet_id]
-                result.append(tweet)
-        except Exception:
-            try:
-                for tweet_id, confidence in model.docvecs.most_similar([vector], topn=3):
-                    tweet = data.iloc[tweet_id]
-                    result.append(tweet)
-            except Exception:
-                for tweet_id, confidence in model.docvecs.most_similar([vector], topn=1):
-                    tweet = data.iloc[tweet_id]
-                    result.append(tweet)
+        return result
 
     return result
 
