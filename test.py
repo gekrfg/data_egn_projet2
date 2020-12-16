@@ -1,4 +1,3 @@
-from webapp import string_similar, get_similar_tweets
 import unittest
 import os
 import requests
