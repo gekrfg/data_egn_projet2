@@ -25,39 +25,7 @@ pipeline{
       }
 	}
 	
-    
-    stage('User acceptance'){
-      steps{
-        script{
-          if (env.BRANCH_NAME == 'main' ) {
-            input 'Do you want to push?'
-          }
-        }
-      }
-    }
-	
-	stage('Release'){
-      steps{
-        script{
-          if (env.BRANCH_NAME == 'dev') {
-            echo 'Push to release '
-          }
-          else if (env.BRANCH_NAME == 'main') {
-            echo 'Already in release'
-          }
-        }  
-      }
-    }
-	
-    stage('Merger'){
-      steps{
-        script{
-          if (env.BRANCH_NAME == 'main') {
-            echo 'Merge'
-          }
-        }
-      }
-    }
+   
 	}
 
   }
