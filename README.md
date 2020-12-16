@@ -2,7 +2,9 @@
 
 ## Create model
 
-Run create\_model.py to get the model_file
+I cannot upload the modelfile because it is too big.
+You can run create\_model.py to get the model_file.
+Or just dowload it [https://efrei365net-my.sharepoint.com/:u:/g/personal/runpeng_ye_efrei_net/EQKE74gRJwNPlWqekhAkSp8B8wd0_0eLjClHzWIFLyKd0A?e=96eSSU](model_file) from OneDrive
 
 ## Build and run the container
 
