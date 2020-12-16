@@ -15,7 +15,7 @@ pipeline{
             powershell 'docker run -p 5000:5000 data-eng-proj2'
       }
     }
-    stage('Unittest'){
+    stage('Stress test'){
       steps{
         script{
 		  if (env.BRANCH_NAME == 'dev'){
