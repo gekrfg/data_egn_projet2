@@ -23,7 +23,19 @@ pipeline{
             }
         }
       }
-	}
+  }
+   stage('Release'){
+      steps{
+        script{
+          if (env.BRANCH_NAME == 'dev') {
+            echo 'Push to release '
+          }
+          else if (env.BRANCH_NAME == 'main') {
+            echo 'Already in release'
+          }
+        }  
+      }
+    }	
 	
    
 	}
