@@ -5,7 +5,7 @@ pipeline{
       steps{
 	    script{
             if (env.BRANCH_NAME == 'dev'||env.BRANCH_NAME == 'realease'){
-            powershell 'docker build -t data-eng-proj2 .'
+            bat 'docker build -t data-eng-proj2 .'
 			}
           }
         }
@@ -15,7 +15,7 @@ pipeline{
       steps{
 	    script{
 	        if (env.BRANCH_NAME == 'dev'||env.BRANCH_NAME == 'realease'){
-            powershell 'docker run -p 5000:5000 data-eng-proj2'
+            bat 'docker run -p 5000:5000 data-eng-proj2'
 			}
 		}
       }
@@ -24,7 +24,7 @@ pipeline{
       steps{
         script{
 		  if (env.BRANCH_NAME == 'dev'){
-            powershell 'python test.py '
+            bat 'python test.py '
             }
         }
       }
@@ -34,7 +34,7 @@ pipeline{
       steps{
         script{
 		  if (env.BRANCH_NAME == 'dev'){
-            powershell 'python stress_test.py '
+            bat 'python stress_test.py '
             }
         }
       }
@@ -73,6 +73,8 @@ pipeline{
         }
       }
     }
+	
+	
 	}
 
   }
