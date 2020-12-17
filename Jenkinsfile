@@ -3,18 +3,21 @@ pipeline{
   stages {
     stage('Build application'){
       steps{
+	    script{
             if (env.BRANCH_NAME == 'dev'||env.BRANCH_NAME == 'realease'){
             powershell 'docker build -t data-eng-proj2 .'
 			}
-          
+          }
         }
       }  
     
     stage('Run image'){
       steps{
+	    script{
 	        if (env.BRANCH_NAME == 'dev'||env.BRANCH_NAME == 'realease'){
             powershell 'docker run -p 5000:5000 data-eng-proj2'
 			}
+		}
       }
     }
     stage('Unittest'){
